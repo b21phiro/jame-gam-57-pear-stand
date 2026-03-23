@@ -4,6 +4,6 @@ export default abstract class UiElement {
 
     abstract get domElement(): HTMLElement;
 
-    abstract init(): void;
+    init(): void {};
 
 }
