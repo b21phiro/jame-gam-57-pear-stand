@@ -1,0 +1,90 @@
+.container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0d0d0d;
+}
+
+.canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #17aeff;
+    background: radial-gradient(circle, rgba(23, 174, 255, 1) 0%, rgba(31, 162, 255, 1) 100%);
+}
+
+.ui-container {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+
+    display: grid;
+    grid-template-columns: 1fr 6fr 1fr;
+    grid-template-rows: 1fr 6fr 1fr;
+    grid-template-areas:
+    "TOP TOP TOP"
+    "LEFT . RIGHT"
+    "BOTTOM BOTTOM BOTTOM";
+
+}
+
+.ui-top {
+    grid-area: TOP;
+    grid-template-areas: "TOP-LEFT TOP-CENTER TOP-RIGHT";
+}
+
+.ui-top > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ui-top-left {
+    grid-area: TOP-LEFT;
+}
+
+.ui-top-center {
+    grid-area: TOP-CENTER;
+
+}
+
+.ui-top-right {
+    grid-area: TOP-RIGHT;
+}
+
+.ui-left {
+    grid-area: LEFT;
+}
+
+.ui-right {
+    grid-area: RIGHT;
+
+}
+
+.ui-bottom {
+    grid-area: BOTTOM;
+}
+
+.ui-top,
+.ui-left,
+.ui-right,
+.ui-bottom {
+    position: relative;
+    display: grid;
+}
+
+.ui-top,
+.ui-bottom {
+    grid-template-columns: 1fr 6fr 1fr;
+}
+
+.toggle {
+    width: 4rem;
+    height: 4rem;
+    background-color: blueviolet;
+    pointer-events: auto;
+}

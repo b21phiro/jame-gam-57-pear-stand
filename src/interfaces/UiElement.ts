@@ -1,0 +1,9 @@
+export default abstract class UiElement {
+
+    protected constructor() {}
+
+    abstract get domElement(): HTMLElement;
+
+    abstract init(): void;
+
+}
