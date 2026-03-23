@@ -1,5 +1,9 @@
 import AreaName from '../enums/Areas.ts';
-import { Group } from 'three';
+import {
+    Group,
+    Vector3,
+    Box3
+} from 'three';
 
 export default abstract class Area {
 
@@ -26,5 +30,11 @@ export default abstract class Area {
     }
 
     abstract initialize(): Promise<Group>;
+
+    getCenter() {
+        return new Box3()
+            .setFromObject(this.meshGroup)
+            .getCenter(new Vector3());
+    }
 
 };

@@ -1,6 +1,6 @@
 import Area from "../interfaces/Area.ts";
 import AreaName from "../enums/Areas.ts";
-import { Scene, PerspectiveCamera, type Group } from "three";
+import { Scene, PerspectiveCamera } from "three";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 export default class AreaManager {
@@ -38,23 +38,32 @@ export default class AreaManager {
             await area.initialize().catch(error => console.error(error));
             scene.add(area.meshGroup);
         }
-        const areaGroup = scene.getObjectByName(area.name) as Group | undefined;
-        if (!areaGroup) throw new Error('Area group not found');
-        this._hideArea(scene, previousArea);
-        areaGroup.visible = true;
-        camera.position.set(
-            areaGroup.position.x + 5.0,
-            areaGroup.position.y + 5.0,
-            areaGroup.position.z - 5.0
-        );
-        orbitControls.target.copy(areaGroup.position);
-        orbitControls.update();
+        this._makeAreaInvisible(scene, previousArea);
+        this._makeAreaVisible(scene, areaName);
+        this._moveCameraTo(area, camera, orbitControls);
     }
 
-    private _hideArea(scene: Scene, areaName: string) {
+    private _makeAreaInvisible(scene: Scene, areaName: string) {
         const areaGroup = scene.getObjectByName(areaName);
         if (!areaGroup) throw new Error('Area group not found');
         areaGroup.visible = false;
+    }
+
+    private _makeAreaVisible(scene: Scene, areaName: string) {
+        const areaGroup = scene.getObjectByName(areaName);
+        if (!areaGroup) throw new Error('Area group not found');
+        areaGroup.visible = true;
+    }
+
+    private _moveCameraTo(area: Area, camera: PerspectiveCamera, orbitControls: OrbitControls) {
+        const center = area.getCenter();
+        camera.position.set(
+            center.x + 10.0,
+            center.y + 10.0,
+            center.z - 10.0
+        );
+        orbitControls.target.copy(center);
+        orbitControls.update();
     }
 
 }
