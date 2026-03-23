@@ -20,14 +20,18 @@ export default class UiManager {
         divTopCenter.classList.add('ui-top-center');
         const divTopRight = document.createElement('DIV');
         divTopRight.classList.add('ui-top-right');
-        divTop.append(
-            divTopLeft,
-            divTopCenter,
-            divTopRight
-        );
+        divTop.append(divTopLeft, divTopCenter, divTopRight);
 
         const divBottom = document.createElement('DIV');
         divBottom.classList.add('ui-bottom');
+
+        const divBottomLeft = document.createElement('DIV');
+        divBottomLeft.classList.add('ui-bottom-left');
+        const divBottomCenter = document.createElement('DIV');
+        divBottomCenter.classList.add('ui-bottom-center');
+        const divBottomRight = document.createElement('DIV');
+        divBottomRight.classList.add('ui-bottom-right');
+        divBottom.append(divBottomLeft, divBottomCenter, divBottomRight);
 
         const divLeft = document.createElement('DIV');
         divLeft.classList.add('ui-left');
@@ -55,6 +59,17 @@ export default class UiManager {
                 this._uiElements.push(uiElement);
             }
         })
+    }
+
+    onAreaChange(currentArea: string) {
+        for (const uiElement of this._uiElements) {
+            if (uiElement.onlyVisible === 'All') continue;
+            if (uiElement.onlyVisible === currentArea) {
+                document.getElementById(uiElement.uuid)?.removeAttribute('aria-hidden');
+            } else {
+                document.getElementById(uiElement.uuid)?.setAttribute('aria-hidden', 'true');
+            }
+        }
     }
 
     private _traverse(node: Element, callback: Function) {

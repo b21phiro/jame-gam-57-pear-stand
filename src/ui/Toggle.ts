@@ -6,6 +6,8 @@ export default class Toggle extends UiElement {
 
     private _action?: Function;
 
+    protected _name: string = "Toggle";
+
     text: string = "Toggle";
     imgOnSrc: string = MarketPNG;
     imgOffSrc: string = TreePNG;
@@ -17,6 +19,7 @@ export default class Toggle extends UiElement {
 
     get domElement(): HTMLElement {
         const div = document.createElement('DIV');
+        div.id = this._uuid;
         div.classList.add('toggle');
 
         const checkbox = document.createElement('INPUT') as HTMLInputElement;

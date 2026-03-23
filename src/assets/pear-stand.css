@@ -37,7 +37,8 @@
     grid-template-areas: "TOP-LEFT TOP-CENTER TOP-RIGHT";
 }
 
-.ui-top > div {
+.ui-top > div,
+.ui-bottom > div {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -67,6 +68,7 @@
 
 .ui-bottom {
     grid-area: BOTTOM;
+    grid-template-areas: "BOTTOM-LEFT BOTTOM-CENTER BOTTOM-RIGHT";
 }
 
 .ui-top,
@@ -86,11 +88,6 @@
     position: relative;
     width: 6rem;
     height: 3rem;
-    pointer-events: auto;
-    background-color: #f2f2f298;
-    border: 2px solid #fff;
-    border-radius: .5rem;
-    overflow: hidden;
 }
 
 .toggle-label {
@@ -150,4 +147,13 @@
 .toggle-checkbox ~ .toggle-label .toggle-image-container:first-child,
 .toggle-checkbox:checked ~ .toggle-label .toggle-image-container:last-child {
     opacity: 1.0;
+}
+
+.toolbox,
+.toggle {
+    pointer-events: auto;
+    background-color: #f2f2f298;
+    border: 2px solid #fff;
+    border-radius: .5rem;
+    overflow: hidden;
 }

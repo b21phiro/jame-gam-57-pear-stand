@@ -54,7 +54,6 @@ export default class Garden extends Area {
         super(name);
     }
 
-
     initialize(): Promise<Group> {
         return new Promise((resolve) => {
 

@@ -11,6 +11,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import UiManager from "./managers/UiManager.ts";
 import Toggle from "./ui/Toggle.ts";
 import UiElementPosition from "./enums/UiElementPositions.ts";
+import Toolbox from "./ui/Toolbox.ts";
 
 export default class PearStand {
 
@@ -60,6 +61,7 @@ export default class PearStand {
         this._rootElement.appendChild(this._uiManager.domElement);
 
         this._areaManager.currentArea = Areas.Garden;
+        this._uiManager.onAreaChange(this._areaManager.currentAreaName);
         this._resizeHandler();
 
         this._camera.position.z = -5.0;
@@ -69,6 +71,11 @@ export default class PearStand {
         sceneToggle.defaultOn = this._areaManager.isCurrent(Areas.Garden);
         sceneToggle.onToggle = () => this._toggleScene();
         this._uiManager.addUiElement(UiElementPosition.TopRight, sceneToggle);
+
+        const gardenToolbox = new Toolbox();
+        gardenToolbox.name = "GardenToolbox";
+        gardenToolbox.onlyVisible = Areas.Garden;
+        this._uiManager.addUiElement(UiElementPosition.BottomCenter, gardenToolbox);
 
     }
 
@@ -101,6 +108,7 @@ export default class PearStand {
         const isNeighbourhood = this._areaManager.isCurrent(Areas.Neighbourhood);
         const changeAreaTo = isNeighbourhood ? Areas.Garden : Areas.Neighbourhood;
         this._areaManager.showArea(changeAreaTo, this._scene, this._camera, this._orbitControls).catch(error => console.error(error));
+        this._uiManager.onAreaChange(this._areaManager.currentAreaName);
     }
 
 }

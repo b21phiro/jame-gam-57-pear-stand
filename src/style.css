@@ -13,3 +13,7 @@ body {
 #app {
     position: relative;
 }
+
+div[aria-hidden="true"] {
+    display: none !important;
+}
