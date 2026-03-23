@@ -59,13 +59,14 @@ export default class PearStand {
         this._rootElement.appendChild(container);
         this._rootElement.appendChild(this._uiManager.domElement);
 
-        this._areaManager.currentArea = Areas.Neighbourhood;
+        this._areaManager.currentArea = Areas.Garden;
         this._resizeHandler();
 
         this._camera.position.z = -5.0;
         this._orbitControls.update();
 
         const sceneToggle = new Toggle();
+        sceneToggle.defaultOn = this._areaManager.isCurrent(Areas.Garden);
         sceneToggle.onToggle = () => this._toggleScene();
         this._uiManager.addUiElement(UiElementPosition.TopRight, sceneToggle);
 
