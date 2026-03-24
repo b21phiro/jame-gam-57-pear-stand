@@ -1,6 +1,6 @@
 import {
     PerspectiveCamera,
-    Scene,
+    Scene, Vector2,
     WebGLRenderer
 } from 'three';
 import NeighbourHood from "./areas/NeighbourHood.ts";
@@ -31,6 +31,7 @@ export default class PearStand {
     private _stateManager: StateManager;
 
     private _areaManager: AreaManager;
+    private _mouse: Vector2;
 
     constructor(rootElement: HTMLElement) {
 
@@ -56,7 +57,12 @@ export default class PearStand {
 
         this._stateManager = new StateManager();
 
+        this._mouse = new Vector2();
+
         window.addEventListener('resize', this._resizeHandler.bind(this));
+        window.addEventListener('mousemove', this._mouseMoveHandler.bind(this));
+        window.addEventListener('mouseout', this._mouseOutHandler.bind(this));
+        window.addEventListener('mouseleave', this._mouseLeaveHandler.bind(this));
 
     }
 
@@ -114,11 +120,12 @@ export default class PearStand {
     public start(): void {
         const areaName = this._areaManager.currentAreaName;
         this._areaManager.showArea(areaName, this._scene, this._camera, this._orbitControls).catch(error => console.error(error));
+        this._mouse.set(-1000000, -1000000);
         this._engine.setAnimationLoop(this._loop.bind(this));
     }
 
     private _loop(): void {
-        this._areaManager.update(this._scene);
+        this._areaManager.update(this._mouse, this._scene, this._camera);
         this._orbitControls.update();
         this._draw();
     }
@@ -142,6 +149,36 @@ export default class PearStand {
         const changeAreaTo = isNeighbourhood ? Areas.Garden : Areas.Neighbourhood;
         this._areaManager.showArea(changeAreaTo, this._scene, this._camera, this._orbitControls).catch(error => console.error(error));
         this._uiManager.onAreaChange(this._areaManager.currentAreaName);
+    }
+
+    private _mouseMoveHandler(event: MouseEvent): void {
+        this._setMouse(event);
+    }
+
+    private _mouseOutHandler(_event: MouseEvent): void {
+        this._mouse.set(-1000000, -1000000);
+    }
+
+    private _mouseLeaveHandler(_event: MouseEvent): void {
+        this._mouse.set(-1000000, -1000000);
+    }
+
+    private _getRelativeToCanvasPosition(event: MouseEvent) {
+        const canvas = this._engine.domElement;
+        const rect = this._engine.domElement.getBoundingClientRect();
+        return new Vector2(
+            (event.clientX - rect.left) * canvas.width / rect.width,
+            (event.clientY - rect.top) * canvas.height / rect.height
+        );
+    }
+
+    private _setMouse(event: MouseEvent): void {
+        const position = this._getRelativeToCanvasPosition(event);
+        const normalized = new Vector2(
+            (position.x / this._engine.domElement.width)   * 2 - 1,
+            (position.y / this._engine.domElement.height) * -2 + 1
+        );
+        this._mouse.copy(normalized);
     }
 
 }

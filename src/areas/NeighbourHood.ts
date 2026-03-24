@@ -4,7 +4,7 @@ import {
     MeshBasicMaterial,
     BoxGeometry,
     Mesh,
-    type Group
+    type Group, type Scene
 } from "three";
 
 export default class NeighbourHood extends Area {
@@ -28,5 +28,7 @@ export default class NeighbourHood extends Area {
 
         });
     }
+
+    update(_scene: Scene): void {}
 
 }

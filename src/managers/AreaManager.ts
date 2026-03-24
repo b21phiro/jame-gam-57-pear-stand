@@ -1,8 +1,10 @@
 import Area from "../interfaces/Area.ts";
 import AreaName from "../enums/Areas.ts";
-import { Scene, PerspectiveCamera } from "three";
+import {Scene, PerspectiveCamera, type Vector2} from "three";
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import Systems from "../enums/Systems.ts";
+import type Garden from "../areas/Garden.ts";
+import type Neighbourhood from "../areas/NeighbourHood.ts";
 
 export default class AreaManager {
 
@@ -57,8 +59,12 @@ export default class AreaManager {
         this._notifyAreaChangeListeners();
     }
 
-    update(scene: Scene): void {
-        this.currentArea!.update(scene);
+    update(_mouse: Vector2, _scene: Scene, _camera: PerspectiveCamera) {
+        if (this.currentAreaName === AreaName.Garden) {
+            (this.currentArea as Garden).update(_mouse, _scene, _camera);
+        } else if (this.currentAreaName === AreaName.Neighbourhood) {
+            (this.currentArea as Neighbourhood).update(_scene);
+        }
     }
 
     private _makeAreaInvisible(scene: Scene, areaName: string) {

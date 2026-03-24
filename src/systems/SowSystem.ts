@@ -1,7 +1,6 @@
-import type System from "../interfaces/System.ts";
 import { Scene } from "three";
 
-export default class SowSystem implements System {
+export default class SowSystem {
 
     constructor() {}
 

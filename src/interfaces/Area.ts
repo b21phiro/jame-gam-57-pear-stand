@@ -2,7 +2,7 @@ import AreaName from '../enums/Areas.ts';
 import {
     Group,
     Vector3,
-    Box3, type Scene
+    Box3,
 } from 'three';
 import Systems from "../enums/Systems.ts";
 
@@ -39,8 +39,6 @@ export default abstract class Area {
     get activeSystem(): string {
         return this._activeSystem;
     }
-
-    update(_scene: Scene): void {}
 
     abstract initialize(): Promise<Group>;
 

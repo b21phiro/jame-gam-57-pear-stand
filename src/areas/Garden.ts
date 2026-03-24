@@ -7,7 +7,7 @@ import {
     MeshBasicMaterial, Object3D,
     Vector2,
     Vector3,
-    Box3, Color, type Scene,
+    Box3, Color, type Scene, type PerspectiveCamera,
 } from "three";
 
 
@@ -15,12 +15,14 @@ import Systems from "../enums/Systems.ts";
 import SowSystem from "../systems/SowSystem.ts";
 import DiggingSystem from "../systems/DiggingSystem.ts";
 import HarvestSystem from "../systems/HarvestSystem.ts";
+import TileSelectionSystem from "../systems/TileSelectionSystem.ts";
 
 export default class Garden extends Area {
 
     private _diggingSystem: DiggingSystem;
     private _harvestSystem: HarvestSystem;
     private _sowSystem: SowSystem;
+    private _tileSelectionSystem: TileSelectionSystem;
 
     protected _gridSize: number = 9;
 
@@ -65,6 +67,7 @@ export default class Garden extends Area {
         this._diggingSystem = new DiggingSystem();
         this._harvestSystem = new HarvestSystem();
         this._sowSystem = new SowSystem();
+        this._tileSelectionSystem = new TileSelectionSystem();
     }
 
     initialize(): Promise<Group> {
@@ -126,7 +129,8 @@ export default class Garden extends Area {
         });
     }
 
-    update(scene: Scene): void {
+    update(mouse: Vector2, scene: Scene, camera: PerspectiveCamera): void {
+        this._tileSelectionSystem.process(mouse, camera, scene);
         switch (this.activeSystem) {
             case Systems.Digging:
                 this._diggingSystem.process(scene);

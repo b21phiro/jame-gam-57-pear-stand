@@ -1,7 +1,6 @@
-import type System from "../interfaces/System.ts";
 import { Scene } from "three";
 
-export default class HarvestSystem implements System {
+export default class HarvestSystem {
 
     constructor() {}
 
