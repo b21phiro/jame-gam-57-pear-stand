@@ -47,19 +47,21 @@ export default class AreaManager {
     }
 
     async showArea(areaName: string, scene: Scene, camera: PerspectiveCamera, orbitControls: OrbitControls) {
-        const previousArea = this.currentAreaName;
+        const previousArea = this.currentArea;
         this.currentArea = areaName;
         const area = this.currentArea;
         if (!area) throw new Error('Area not found');
         if (!area.initialized) {
-            await area.initialize().catch(error => console.error(error));
+            await area.initialize(scene).catch(error => console.error(error));
             scene.add(area.meshGroup);
         }
-        this._makeAreaInvisible(scene, previousArea);
+        previousArea?.hideLight(scene);
+        this._makeAreaInvisible(scene, previousArea!.name);
         this._makeAreaVisible(scene, areaName);
         this._moveCameraTo(area, camera, orbitControls);
         this.setCurrentSystem(Systems.None);
         this._notifyAreaChangeListeners();
+        this.currentArea!.showLight(scene);
     }
 
     update(_mouse: Vector2, _scene: Scene, _camera: PerspectiveCamera, _didClick: boolean) {

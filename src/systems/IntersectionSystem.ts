@@ -20,7 +20,9 @@ export default class IntersectionSystem {
 
     process(mouse: Vector2, camera: PerspectiveCamera, scene: Scene): void {
         this._raycaster.setFromCamera(mouse, camera);
-        this._intersects = this._raycaster.intersectObjects(scene.children);
+        this._intersects = this._raycaster.intersectObjects(scene.children).filter(intersect =>
+            intersect.object.name !== ''
+        );
     }
 
     get intersects(): Intersection<Object3D>[] {

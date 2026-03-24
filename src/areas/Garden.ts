@@ -4,10 +4,15 @@ import {
     BoxGeometry,
     type Group,
     Mesh,
-    MeshBasicMaterial, Object3D,
+    Object3D,
     Vector2,
     Vector3,
-    Box3, Color, type Scene, type PerspectiveCamera, type Intersection,
+    Box3,
+    Color,
+    type Scene,
+    type PerspectiveCamera,
+    type Intersection,
+    MeshStandardMaterial,
 } from "three";
 
 import Systems from "../enums/Systems.ts";
@@ -66,7 +71,7 @@ export default class Garden extends Area {
         this._sowSystem = new SowSystem();
     }
 
-    initialize(): Promise<Group> {
+    initialize(scene: Scene): Promise<Group> {
         return new Promise((resolve) => {
 
             this._iterateLayer(this._terrainLayer, (tileType, position) => {
@@ -120,6 +125,8 @@ export default class Garden extends Area {
 
             this._initialized = true;
 
+            this._createLight(scene);
+
             resolve(this.meshGroup);
 
         });
@@ -148,7 +155,7 @@ export default class Garden extends Area {
     private _addDirtTile(gridPosition: Vector2, group: Group) {
         const height = 1.0;
         const dirtColor = new Color(0x012340);
-        const boxMaterial = new MeshBasicMaterial({ color: dirtColor });
+        const boxMaterial = new MeshStandardMaterial({ color: dirtColor });
         const boxGeometry = new BoxGeometry(1, height, 1);
         const box = new Mesh(boxGeometry, boxMaterial);
         const position = new Vector3(
@@ -168,7 +175,7 @@ export default class Garden extends Area {
     private _addGrassTile(terrainTile: Object3D) {
         const height = 0.1;
         const grassColor = new Color(0x00A670);
-        const boxMaterial = new MeshBasicMaterial({ color: grassColor });
+        const boxMaterial = new MeshStandardMaterial({ color: grassColor });
         const boxGeometry = new BoxGeometry(1.0, height, 1.0);
         const box = new Mesh(boxGeometry, boxMaterial);
         box.name = 'Top';
@@ -184,7 +191,7 @@ export default class Garden extends Area {
 
     private _addEmptyTopTile(terrainTile: Object3D) {
         const height = 0.1;
-        const boxMaterial = new MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.0 });
+        const boxMaterial = new MeshStandardMaterial({ color: 0x000000, transparent: true, opacity: 0.0 });
         const boxGeometry = new BoxGeometry(1.0, height, 1.0);
         const box = new Mesh(boxGeometry, boxMaterial);
         box.name = 'Top';
@@ -206,7 +213,7 @@ export default class Garden extends Area {
 
     private _addPearTree(terrainTile: Mesh<BoxGeometry>) {
         const height = 3;
-        const treeMaterial = new MeshBasicMaterial({ color: 0x0000FF });
+        const treeMaterial = new MeshStandardMaterial({ color: 0x0000FF });
         const treeGeometry = new BoxGeometry(1.0, height, 1.0);
         const tree = new Mesh(treeGeometry, treeMaterial);
         tree.name = 'Tree.Pear';
