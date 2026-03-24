@@ -15,6 +15,11 @@ import Toolbox from "./ui/Toolbox.ts";
 import StateManager from "./managers/StateManager.ts";
 import States from "./enums/States.ts";
 
+import ShovelPNG from "./assets/images/shovel.png";
+import SeedPNG from "./assets/images/seed.png";
+import HarvestPNG from "./assets/images/harvest.png";
+import Systems from "./enums/Systems.ts";
+
 export default class PearStand {
 
     private _rootElement: HTMLElement;
@@ -85,20 +90,24 @@ export default class PearStand {
         gardenToolbox.addTool(States.Digging, () => {
             this._stateManager.currentState = States.Digging;
             gardenToolbox.handleStateChange(this._stateManager.currentState);
-        });
+            this._areaManager.setCurrentSystem(Systems.Digging);
+        }, ShovelPNG);
 
         gardenToolbox.addTool(States.Planting, () => {
             this._stateManager.currentState = States.Planting;
             gardenToolbox.handleStateChange(this._stateManager.currentState);
-        });
+            this._areaManager.setCurrentSystem(Systems.Sowing);
+        }, SeedPNG);
 
         gardenToolbox.addTool(States.Harvesting, () => {
             this._stateManager.currentState = States.Harvesting;
             gardenToolbox.handleStateChange(this._stateManager.currentState);
-        });
+            this._areaManager.setCurrentSystem(Systems.Harvesting);
+        }, HarvestPNG);
 
 
         this._uiManager.onAreaChange(this._areaManager.currentAreaName);
+        this._areaManager.onAreaChange(gardenToolbox.handleAreaChange.bind(gardenToolbox));
 
     }
 
@@ -109,6 +118,7 @@ export default class PearStand {
     }
 
     private _loop(): void {
+        this._areaManager.update(this._scene);
         this._orbitControls.update();
         this._draw();
     }

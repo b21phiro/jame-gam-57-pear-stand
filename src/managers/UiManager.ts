@@ -2,7 +2,7 @@ import UiElement from "../interfaces/UiElement.ts";
 
 export default class UiManager {
 
-    private _node: HTMLElement;
+    private _node: HTMLElement | undefined;
     private _uiElements: UiElement[] = [];
 
     constructor() {}
@@ -52,6 +52,7 @@ export default class UiManager {
     }
 
     addUiElement(side: string, uiElement: UiElement) {
+        if (!this._node) throw new Error('DOM element not initialized');
         this._traverse(this._node, (child: Element) => {
             if (child.classList.contains(side)) {
                 child.appendChild(uiElement.domElement);
@@ -70,14 +71,6 @@ export default class UiManager {
                 document.getElementById(uiElement.uuid)?.setAttribute('aria-hidden', 'true');
             }
         }
-    }
-
-    onStateChange(state: string) {
-        console.log('State changed to: ' + state);
-    }
-
-    update(): void {
-
     }
 
     private _traverse(node: Element, callback: Function) {

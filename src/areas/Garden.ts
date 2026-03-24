@@ -7,10 +7,20 @@ import {
     MeshBasicMaterial, Object3D,
     Vector2,
     Vector3,
-    Box3, Color,
+    Box3, Color, type Scene,
 } from "three";
 
+
+import Systems from "../enums/Systems.ts";
+import SowSystem from "../systems/SowSystem.ts";
+import DiggingSystem from "../systems/DiggingSystem.ts";
+import HarvestSystem from "../systems/HarvestSystem.ts";
+
 export default class Garden extends Area {
+
+    private _diggingSystem: DiggingSystem;
+    private _harvestSystem: HarvestSystem;
+    private _sowSystem: SowSystem;
 
     protected _gridSize: number = 9;
 
@@ -31,7 +41,7 @@ export default class Garden extends Area {
         'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS',
         'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS',
         'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS',
-        'GRASS', 'GRASS', 'EMPTY', 'GRASS', 'EMPTY', 'GRASS', 'GRASS', 'GRASS', 'GRASS',
+        'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS',
         'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS',
         'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS',
         'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS', 'GRASS',
@@ -43,7 +53,7 @@ export default class Garden extends Area {
         'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY',
         'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY',
         'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY',
-        'EMPTY', 'EMPTY', 'TREE.PEAR', 'EMPTY', 'TREE.PEAR', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY',
+        'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY',
         'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY',
         'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY',
         'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY', 'EMPTY',
@@ -52,6 +62,9 @@ export default class Garden extends Area {
 
     constructor(name: string = AreaName.Garden) {
         super(name);
+        this._diggingSystem = new DiggingSystem();
+        this._harvestSystem = new HarvestSystem();
+        this._sowSystem = new SowSystem();
     }
 
     initialize(): Promise<Group> {
@@ -111,6 +124,26 @@ export default class Garden extends Area {
             resolve(this.meshGroup);
 
         });
+    }
+
+    update(scene: Scene): void {
+        switch (this.activeSystem) {
+            case Systems.Digging:
+                this._diggingSystem.process(scene);
+                break;
+            case Systems.Harvesting:
+                this._harvestSystem.process(scene);
+                break;
+            case Systems.Sowing:
+                this._sowSystem.process(scene);
+                break;
+            case Systems.None:
+                // Do nothing
+                break;
+            default:
+                console.warn(`Unsupported system: \"${this.activeSystem}\"`);
+                break;
+        }
     }
 
     private _addDirtTile(gridPosition: Vector2, group: Group) {

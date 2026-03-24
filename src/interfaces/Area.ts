@@ -2,8 +2,9 @@ import AreaName from '../enums/Areas.ts';
 import {
     Group,
     Vector3,
-    Box3
+    Box3, type Scene
 } from 'three';
+import Systems from "../enums/Systems.ts";
 
 export default abstract class Area {
 
@@ -11,6 +12,8 @@ export default abstract class Area {
     protected _gridSize: number = 25;
     protected _areaMeshGroup: Group = new Group();
     protected _initialized: boolean = false;
+
+    protected _activeSystem: string = Systems.None;
 
     protected constructor(name: string) {
         this._name = name;
@@ -28,6 +31,16 @@ export default abstract class Area {
     get initialized(): boolean {
         return this._initialized;
     }
+
+    set activeSystem(system: string) {
+        this._activeSystem = system;
+    }
+
+    get activeSystem(): string {
+        return this._activeSystem;
+    }
+
+    update(_scene: Scene): void {}
 
     abstract initialize(): Promise<Group>;
 
