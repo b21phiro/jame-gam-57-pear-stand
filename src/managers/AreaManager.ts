@@ -5,17 +5,20 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import Systems from "../enums/Systems.ts";
 import type Garden from "../areas/Garden.ts";
 import type Neighbourhood from "../areas/NeighbourHood.ts";
+import IntersectionSystem from "../systems/IntersectionSystem.ts";
 
 export default class AreaManager {
 
     private _areas: Area[];
     private _currentAreaName: string;
     private _areaChangeListeners: Function[];
+    private _intersectionSystem: IntersectionSystem;
 
     constructor(areas: Area[] = []) {
         this._areas = areas;
         this._currentAreaName = AreaName.Unknown;
         this._areaChangeListeners = [];
+        this._intersectionSystem = new IntersectionSystem();
     }
 
     set currentArea(theArea: string) {
@@ -59,9 +62,10 @@ export default class AreaManager {
         this._notifyAreaChangeListeners();
     }
 
-    update(_mouse: Vector2, _scene: Scene, _camera: PerspectiveCamera) {
+    update(_mouse: Vector2, _scene: Scene, _camera: PerspectiveCamera, _didClick: boolean) {
+        this._intersectionSystem.process(_mouse, _camera, _scene);
         if (this.currentAreaName === AreaName.Garden) {
-            (this.currentArea as Garden).update(_mouse, _scene, _camera);
+            (this.currentArea as Garden).update(_scene, _camera, this._intersectionSystem.intersects, _didClick);
         } else if (this.currentAreaName === AreaName.Neighbourhood) {
             (this.currentArea as Neighbourhood).update(_scene);
         }

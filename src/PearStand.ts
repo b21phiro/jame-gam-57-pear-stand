@@ -32,6 +32,7 @@ export default class PearStand {
 
     private _areaManager: AreaManager;
     private _mouse: Vector2;
+    private _mouseDown: boolean = false;
 
     constructor(rootElement: HTMLElement) {
 
@@ -63,6 +64,8 @@ export default class PearStand {
         window.addEventListener('mousemove', this._mouseMoveHandler.bind(this));
         window.addEventListener('mouseout', this._mouseOutHandler.bind(this));
         window.addEventListener('mouseleave', this._mouseLeaveHandler.bind(this));
+        window.addEventListener('mousedown', this._mouseDownHandler.bind(this));
+        window.addEventListener('mouseup', this._mouseUpHandler.bind(this));
 
     }
 
@@ -125,7 +128,7 @@ export default class PearStand {
     }
 
     private _loop(): void {
-        this._areaManager.update(this._mouse, this._scene, this._camera);
+        this._areaManager.update(this._mouse, this._scene, this._camera, this._mouseDown);
         this._orbitControls.update();
         this._draw();
     }
@@ -161,6 +164,14 @@ export default class PearStand {
 
     private _mouseLeaveHandler(_event: MouseEvent): void {
         this._mouse.set(-1000000, -1000000);
+    }
+
+    private _mouseDownHandler(_event: MouseEvent): void {
+        this._mouseDown = true;
+    }
+
+    private _mouseUpHandler(_event: MouseEvent): void {
+        this._mouseDown = false;
     }
 
     private _getRelativeToCanvasPosition(event: MouseEvent) {

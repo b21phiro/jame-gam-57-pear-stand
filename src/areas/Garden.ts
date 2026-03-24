@@ -7,22 +7,19 @@ import {
     MeshBasicMaterial, Object3D,
     Vector2,
     Vector3,
-    Box3, Color, type Scene, type PerspectiveCamera,
+    Box3, Color, type Scene, type PerspectiveCamera, type Intersection,
 } from "three";
-
 
 import Systems from "../enums/Systems.ts";
 import SowSystem from "../systems/SowSystem.ts";
 import DiggingSystem from "../systems/DiggingSystem.ts";
 import HarvestSystem from "../systems/HarvestSystem.ts";
-import TileSelectionSystem from "../systems/TileSelectionSystem.ts";
 
 export default class Garden extends Area {
 
     private _diggingSystem: DiggingSystem;
     private _harvestSystem: HarvestSystem;
     private _sowSystem: SowSystem;
-    private _tileSelectionSystem: TileSelectionSystem;
 
     protected _gridSize: number = 9;
 
@@ -67,7 +64,6 @@ export default class Garden extends Area {
         this._diggingSystem = new DiggingSystem();
         this._harvestSystem = new HarvestSystem();
         this._sowSystem = new SowSystem();
-        this._tileSelectionSystem = new TileSelectionSystem();
     }
 
     initialize(): Promise<Group> {
@@ -129,17 +125,16 @@ export default class Garden extends Area {
         });
     }
 
-    update(mouse: Vector2, scene: Scene, camera: PerspectiveCamera): void {
-        this._tileSelectionSystem.process(mouse, camera, scene);
+    update(_scene: Scene, _camera: PerspectiveCamera, _intersects: Intersection<Object3D>[], _didClick: boolean): void {
         switch (this.activeSystem) {
             case Systems.Digging:
-                this._diggingSystem.process(scene);
+                this._diggingSystem.process(_scene, _intersects, _didClick);
                 break;
             case Systems.Harvesting:
-                this._harvestSystem.process(scene);
+                this._harvestSystem.process(_scene);
                 break;
             case Systems.Sowing:
-                this._sowSystem.process(scene);
+                this._sowSystem.process(_scene);
                 break;
             case Systems.None:
                 // Do nothing
@@ -177,6 +172,11 @@ export default class Garden extends Area {
         const boxGeometry = new BoxGeometry(1.0, height, 1.0);
         const box = new Mesh(boxGeometry, boxMaterial);
         box.name = 'Top';
+        box.userData = {
+          type: 'Grass',
+          isDiggable: true,
+          dug: false,
+        };
         terrainTile.add(box);
         const bbox = new Box3().setFromObject(terrainTile);
         box.position.y = bbox.max.y + height / 2;
