@@ -97,21 +97,33 @@ export default class PearStand {
         this._uiManager.addUiElement(UiElementPosition.BottomCenter, gardenToolbox);
 
         gardenToolbox.addTool(States.Digging, () => {
-            this._stateManager.currentState = States.Digging;
+            this._stateManager.toggleState(States.Digging);
             gardenToolbox.handleStateChange(this._stateManager.currentState);
-            this._areaManager.setCurrentSystem(Systems.Digging);
+            if (this._stateManager.currentState === States.None) {
+                this._areaManager.setCurrentSystem(Systems.None);
+            } else {
+                this._areaManager.setCurrentSystem(Systems.Digging);
+            }
         }, ShovelPNG);
 
         gardenToolbox.addTool(States.Planting, () => {
-            this._stateManager.currentState = States.Planting;
+            this._stateManager.toggleState(States.Planting);
             gardenToolbox.handleStateChange(this._stateManager.currentState);
-            this._areaManager.setCurrentSystem(Systems.Sowing);
+            if (this._stateManager.currentState === States.None) {
+                this._areaManager.setCurrentSystem(Systems.None);
+            } else {
+                this._areaManager.setCurrentSystem(Systems.Sowing);
+            }
         }, SeedPNG);
 
         gardenToolbox.addTool(States.Harvesting, () => {
-            this._stateManager.currentState = States.Harvesting;
+            this._stateManager.toggleState(States.Harvesting);
             gardenToolbox.handleStateChange(this._stateManager.currentState);
-            this._areaManager.setCurrentSystem(Systems.Harvesting);
+            if (this._stateManager.currentState === States.None) {
+                this._areaManager.setCurrentSystem(Systems.None);
+            } else {
+                this._areaManager.setCurrentSystem(Systems.Harvesting);
+            }
         }, HarvestPNG);
 
 

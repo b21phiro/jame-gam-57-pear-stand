@@ -11,7 +11,18 @@ export default class StateManager {
     }
 
     get currentState(): string {
+        console.log('Current state: ' + this._currentState);
         return this._currentState;
+    }
+
+    toggleState(state: string) {
+        if (this._currentState === state) {
+            this._currentState = States.None;
+            console.log('Resetting state');
+        } else {
+            this._currentState = state;
+            console.log('Setting state to: ' + state);
+        }
     }
 
 }

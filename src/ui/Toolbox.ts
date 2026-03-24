@@ -28,12 +28,10 @@ export default class Toolbox extends UiElement {
     }
 
     handleStateChange(state: string) {
-        if (!this._toolItems.has(state)) return;
         this._updateToolButtonsAriaPressedOnState(state);
     }
 
     handleAreaChange() {
-        console.log('Area changed');
         this._updateToolButtonsAriaPressedOnState(States.None);
     }
 
