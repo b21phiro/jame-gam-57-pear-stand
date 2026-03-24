@@ -105,7 +105,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity .2s ease-in;
 }
 
 .toggle-image {
@@ -113,12 +112,6 @@
     aspect-ratio: 1;
     object-fit: contain;
     object-position: center center;
-    user-drag: none;
-    -webkit-user-drag: none;
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
 }
 
 .toggle-label::before {
@@ -127,7 +120,7 @@
     width: 50%;
     height: 100%;
     inset: 0;
-    background-color: #fff;
+    background-color: #f2f2f2;
     transition: transform .2s ease-in-out;
     z-index: -1;
 }
@@ -140,20 +133,73 @@
    transform: translateX(100%);
 }
 
-.toggle-checkbox:checked ~ .toggle-label .toggle-image-container:first-child,
-.toggle-checkbox ~ .toggle-label .toggle-image-container:last-child {
-    opacity: 0.5;
+.toolbox {
+    display: flex;
 }
-.toggle-checkbox ~ .toggle-label .toggle-image-container:first-child,
-.toggle-checkbox:checked ~ .toggle-label .toggle-image-container:last-child {
+
+.toolbox-button {
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 0;
+    background-color: transparent;
+}
+
+.toolbox-button:hover {
+    background-color: #f2f2f295;
+}
+
+.toolbox-button[aria-pressed="true"] {
+    background-color: #f2f2f2;
+}
+.toolbox-button[aria-pressed="true"] .toolbox-button-image {
     opacity: 1.0;
+}
+
+.toolbox-button:not(:first-child) {
+    border-left: 2px solid #fff;
+}
+
+.toolbox-button-image {
+    width: 1.5rem;
+    aspect-ratio: 1;
 }
 
 .toolbox,
 .toggle {
     pointer-events: auto;
-    background-color: #f2f2f298;
+    background-color: #f2f2f290;
     border: 2px solid #fff;
     border-radius: .5rem;
     overflow: hidden;
+}
+
+.toggle-checkbox:checked ~ .toggle-label .toggle-image-container:first-child,
+.toggle-checkbox ~ .toggle-label .toggle-image-container:last-child,
+.toolbox-button .toolbox-button-image {
+    opacity: 0.5;
+}
+
+.toggle-checkbox ~ .toggle-label .toggle-image-container:first-child,
+.toggle-checkbox:checked ~ .toggle-label .toggle-image-container:last-child,
+.toolbox-button:hover .toolbox-button-image {
+    opacity: 1.0;
+}
+
+.toggle-image-container,
+.toolbox-button .toolbox-button-image {
+    transition: opacity .1s ease-in;
+}
+
+.toggle-image,
+.toolbox-button-image {
+    user-drag: none;
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
 }

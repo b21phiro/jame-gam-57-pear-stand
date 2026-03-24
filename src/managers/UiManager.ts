@@ -72,6 +72,14 @@ export default class UiManager {
         }
     }
 
+    onStateChange(state: string) {
+        console.log('State changed to: ' + state);
+    }
+
+    update(): void {
+
+    }
+
     private _traverse(node: Element, callback: Function) {
         for (let i = 0; i < node.children.length; i++) {
             const child = node.children[i];

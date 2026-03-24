@@ -12,6 +12,8 @@ import UiManager from "./managers/UiManager.ts";
 import Toggle from "./ui/Toggle.ts";
 import UiElementPosition from "./enums/UiElementPositions.ts";
 import Toolbox from "./ui/Toolbox.ts";
+import StateManager from "./managers/StateManager.ts";
+import States from "./enums/States.ts";
 
 export default class PearStand {
 
@@ -21,6 +23,7 @@ export default class PearStand {
     private _camera: PerspectiveCamera;
     private _orbitControls: OrbitControls;
     private _uiManager: UiManager;
+    private _stateManager: StateManager;
 
     private _areaManager: AreaManager;
 
@@ -46,6 +49,8 @@ export default class PearStand {
 
         this._uiManager = new UiManager();
 
+        this._stateManager = new StateManager();
+
         window.addEventListener('resize', this._resizeHandler.bind(this));
 
     }
@@ -61,7 +66,7 @@ export default class PearStand {
         this._rootElement.appendChild(this._uiManager.domElement);
 
         this._areaManager.currentArea = Areas.Garden;
-        this._uiManager.onAreaChange(this._areaManager.currentAreaName);
+
         this._resizeHandler();
 
         this._camera.position.z = -5.0;
@@ -76,6 +81,24 @@ export default class PearStand {
         gardenToolbox.name = "GardenToolbox";
         gardenToolbox.onlyVisible = Areas.Garden;
         this._uiManager.addUiElement(UiElementPosition.BottomCenter, gardenToolbox);
+
+        gardenToolbox.addTool(States.Digging, () => {
+            this._stateManager.currentState = States.Digging;
+            gardenToolbox.handleStateChange(this._stateManager.currentState);
+        });
+
+        gardenToolbox.addTool(States.Planting, () => {
+            this._stateManager.currentState = States.Planting;
+            gardenToolbox.handleStateChange(this._stateManager.currentState);
+        });
+
+        gardenToolbox.addTool(States.Harvesting, () => {
+            this._stateManager.currentState = States.Harvesting;
+            gardenToolbox.handleStateChange(this._stateManager.currentState);
+        });
+
+
+        this._uiManager.onAreaChange(this._areaManager.currentAreaName);
 
     }
 
